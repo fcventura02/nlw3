@@ -32,6 +32,10 @@ export default {
             open_on_weekends
         } = req.body
 
+        const reqImages = req.files as Express.Multer.File[];
+        const images = reqImages.map(image=>{
+            return{path: image.filename}
+        })
         const orphanagesRepository = getRepository(Orphanage);
         const orphanage = orphanagesRepository.create({
             name,
@@ -40,11 +44,12 @@ export default {
             about,
             instructions,
             opening_hours,
-            open_on_weekends
+            open_on_weekends,
+            images
         })
 
         await orphanagesRepository.save(orphanage)
 
-        return res.status(201).json({ ok: "true" })
+        return res.status(201).json(orphanage)
     }
 }
