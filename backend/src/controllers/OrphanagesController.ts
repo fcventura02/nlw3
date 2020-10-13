@@ -8,14 +8,10 @@ export default {
     async show(req: Request, res: Response) {
         const { id } = req.params
         const orphanagesRepository = getRepository(Orphanage);
-        try {
-            const orphanage = await orphanagesRepository.findOneOrFail(id,{
-                relations: ['images']
-            });
-            return res.json(orphanageView.render(orphanage))
-        } catch (error) {
-            return res.status(400).json({ message: 'não foi possivel encontrar o orfanato.' })
-        }
+        const orphanage = await orphanagesRepository.findOneOrFail(id, {
+            relations: ['images']
+        });
+        return res.json(orphanageView.render(orphanage))
     },
 
     async indexedDB(req: Request, res: Response) {
@@ -38,8 +34,8 @@ export default {
         } = req.body
 
         const reqImages = req.files as Express.Multer.File[];
-        const images = reqImages.map(image=>{
-            return{path: image.filename}
+        const images = reqImages.map(image => {
+            return { path: image.filename }
         })
         const orphanagesRepository = getRepository(Orphanage);
         const orphanage = orphanagesRepository.create({
