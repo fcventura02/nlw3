@@ -2,7 +2,7 @@ import React, { FormEvent, useState, ChangeEvent } from "react";
 import { Map, Marker, TileLayer } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet';
 
-import { FiPlus } from "react-icons/fi";
+import { FiPlus, FiX } from "react-icons/fi";
 import Sidebar from "../components/Sidebar";
 import mapIcon from "../utils/mapIcon";
 
@@ -44,6 +44,19 @@ export default function CreateOrphanage() {
 
     setPreviewImages(selectedImagesPreview)
   }
+
+  function removeImage(index: number) {
+    const selectedImages = Array.from(images)
+    selectedImages.splice(index, 1)
+
+    setImages(selectedImages)
+
+    const selectedImagesPreview = selectedImages.map(image => {
+      return URL.createObjectURL(image)
+    })
+    setPreviewImages(selectedImagesPreview)
+  }
+
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -120,9 +133,15 @@ export default function CreateOrphanage() {
 
               <div className="images-container">
                 {
-                  previewImages.map(image => {
+                  previewImages.map((image, index) => {
                     return (
-                      <img key={image} src={image} alt={name} />
+                      <div key={image} className="image">
+                        <img src={image} alt={name} />
+                        <button type="button" onClick={() => removeImage(index)}>
+                          <FiX size={24} color="#FF669D" rotate={15} />
+                        </button>
+                      </div>
+
                     )
                   })
                 }
