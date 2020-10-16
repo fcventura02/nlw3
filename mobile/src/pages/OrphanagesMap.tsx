@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Dimensions, Text } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
-
-import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import mapMarker from '../images/map-marker.png';
-
-import { Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import api from '../services/api';
 
-interface OrphanegeItem{
+import { StyleSheet, View, Dimensions, Text } from 'react-native';
+import { RectButton } from 'react-native-gesture-handler';
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import mapMarker from '../images/map-marker.png';
+import { Feather } from '@expo/vector-icons';
+
+interface OrphanegeItem {
   id: number,
   name: string,
   latitude: number,
@@ -20,13 +19,13 @@ export default function OrphanagesMap() {
   const navigation = useNavigation();
   const [orphanages, setOrphanages] = useState<OrphanegeItem[]>([])
 
-  useEffect(() => {
+  useFocusEffect(() => {
     api.get('orphanages').then(res => {
       setOrphanages(res.data)
     })
-  }, []);
-  function handleNavigateToOrphanageDetails(id:number) {
-    navigation.navigate('OrphanagesDetails', {id});
+  });
+  function handleNavigateToOrphanageDetails(id: number) {
+    navigation.navigate('OrphanagesDetails', { id });
   }
 
   function handleNavigateToCreateOrphanage() {
@@ -46,7 +45,7 @@ export default function OrphanagesMap() {
         {
           orphanages.map(orphanage => (
             <Marker
-            key={orphanage.id}
+              key={orphanage.id}
               icon={mapMarker}
               coordinate={{
                 latitude: orphanage.latitude,
@@ -57,7 +56,7 @@ export default function OrphanagesMap() {
                 y: 0.8,
               }}
             >
-              <Callout tooltip onPress={()=> handleNavigateToOrphanageDetails(orphanage.id)}>
+              <Callout tooltip onPress={() => handleNavigateToOrphanageDetails(orphanage.id)}>
                 <View style={styles.calloutContainer}>
                   <Text style={styles.calloutText}>{orphanage.name}</Text>
                 </View>
